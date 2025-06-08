@@ -1,24 +1,28 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import ResearchAssistantSubmenu from './ResearchAssistantSubmenu';
+import ResearchAssistantSubmenu from "./ResearchAssistantSubmenu";
 
 const DesktopNavigation: React.FC = () => {
   return (
     <div className="hidden md:flex items-center justify-between flex-grow ml-8">
       <nav className="flex items-center space-x-8">
-        <Link to="/" className="text-yellow-300 font-medium hover:text-white transition-colors">
+        <Link
+          to="/"
+          className="text-yellow-300 font-medium hover:text-white transition-colors"
+        >
           HOME
         </Link>
-        <Link to="/articles" className="text-white font-medium hover:text-yellow-300 transition-colors">
+
+        {/* TODO: implement it */}
+        {/* <Link to="/articles" className="text-white font-medium hover:text-yellow-300 transition-colors">
           EDIÇÕES ANTERIORES
         </Link>
         <Link to="/articles" className="text-white font-medium hover:text-yellow-300 transition-colors">
@@ -42,13 +46,14 @@ const DesktopNavigation: React.FC = () => {
         </Link>
         <button className="text-white" aria-label="Search">
           <Search size={20} />
-        </button>
+        </button> */}
       </nav>
 
       <div>
-        <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold">
+        {/* TODO: implement it */}
+        {/* <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold">
           LOGIN
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

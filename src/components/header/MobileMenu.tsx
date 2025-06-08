@@ -1,7 +1,6 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -14,14 +13,16 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   return (
     <nav className="md:hidden bg-blue-950">
       <div className="flex flex-col p-4 space-y-3">
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="text-yellow-300 font-medium hover:text-white transition-colors py-2 px-4"
           onClick={onClose}
         >
           HOME
         </Link>
-        <Link 
+
+        {/* TODO: implement it */}
+        {/* <Link 
           to="/articles" 
           className="text-white font-medium hover:text-yellow-300 transition-colors py-2 px-4"
           onClick={onClose}
@@ -86,7 +87,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold w-full">
             LOGIN
           </Button>
-        </div>
+        </div> */}
       </div>
     </nav>
   );

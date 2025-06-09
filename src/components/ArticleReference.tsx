@@ -1,6 +1,6 @@
 import React from "react";
 import { Download, ExternalLink, BookOpen, Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Article } from "@/services/chat/types";
 
 interface ArticleReferenceProps {
@@ -61,14 +61,20 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
         >
           <ExternalLink className="h-4 w-4 mr-1" /> Ver artigo
         </Button>
-        {/* <Button
-          variant="outline"
-          size="sm"
-          className="text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple"
-          onClick={() => window.open(article.downloadUrl, "_blank")}
+        <a
+          className={buttonVariants({
+            variant: "outline",
+            size: "sm",
+            className:
+              "text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple",
+          })}
+          href={article.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          download
         >
           <Download className="h-4 w-4 mr-1" /> Download
-        </Button> */}
+        </a>
         {/* <Button
           variant="outline"
           size="sm"

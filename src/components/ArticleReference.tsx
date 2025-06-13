@@ -1,22 +1,19 @@
-import React from "react";
-import { Download, ExternalLink, BookOpen, Copy } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Article } from "@/services/chat/types";
+import { BookOpen, Copy, ExternalLink } from "lucide-react";
+import React from "react";
+import { toast } from "sonner";
 
 interface ArticleReferenceProps {
   article: Article;
 }
 
 const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
-  // const handleCiteCopy = () => {
-  //   const citation = `${article.authors.join(", ")} (${article.year}). ${
-  //     article.title
-  //   }. EMPRAD - Encontro de Mestrados Profissionais em Administração, p. ${
-  //     article.pageNumber
-  //   }.`;
-  //   navigator.clipboard.writeText(citation);
-  //   // Em uma aplicação real, adicionaríamos um feedback visual aqui
-  // };
+  const handleCiteCopy = () => {
+    const citation = `${article.title} - ${article.content}`;
+    navigator.clipboard.writeText(citation);
+    toast.success("Citação copiada para a área de transferência");
+  };
 
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
@@ -32,14 +29,14 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
         )} */}
       </div>
 
-      {/* {article.snippet && (
+      {article.content && (
         <div className="my-3 text-sm bg-gray-50 p-3 rounded border border-gray-200 italic">
           <p className="mb-1 text-xs text-gray-500 font-normal not-italic">
             Trecho relevante:
           </p>
-          "{article.snippet}"
+          "{article.content}"
         </div>
-      )} */}
+      )}
 
       <div className="flex flex-wrap gap-2 mt-2 mb-3">
         {/* {article.keywords.map((keyword, index) => (
@@ -61,7 +58,7 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
         >
           <ExternalLink className="h-4 w-4 mr-1" /> Ver artigo
         </Button>
-        <a
+        {/* <a
           className={buttonVariants({
             variant: "outline",
             size: "sm",
@@ -69,27 +66,26 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
               "text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple",
           })}
           href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          download
+          download={`${article.title}.pdf`}
         >
           <Download className="h-4 w-4 mr-1" /> Download
-        </a>
-        {/* <Button
+        </a> */}
+        <Button
           variant="outline"
           size="sm"
           className="text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple"
           onClick={handleCiteCopy}
         >
           <Copy className="h-4 w-4 mr-1" /> Copiar citação
-        </Button> */}
-        {/* <Button
+        </Button>
+        <Button
           variant="outline"
           size="sm"
           className="text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple"
+          onClick={() => toast.info("Funcionalidade em desenvolvimento")}
         >
           <BookOpen className="h-4 w-4 mr-1" /> Resumo
-        </Button> */}
+        </Button>
       </div>
     </div>
   );

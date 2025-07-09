@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import SmartSearch from "./pages/SmartSearch";
 import DirectDownload from "./pages/DirectDownload";
 import IndexedArticles from "./pages/IndexedArticles";
+import PromptEditor from "./pages/PromptEditor";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/smart-search" element={<SmartSearch />} />
           <Route path="/direct-download" element={<DirectDownload />} />
           <Route path="/indexed-articles" element={<IndexedArticles />} />
+          <Route path="/prompt-editor" element={<PromptEditor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

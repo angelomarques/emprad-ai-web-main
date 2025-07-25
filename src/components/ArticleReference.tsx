@@ -3,6 +3,7 @@ import { Article } from "@/services/chat/types";
 import { BookOpen, Copy, ExternalLink } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { getArticleSummary } from "@/services/articleService";
 
 interface ArticleReferenceProps {
   article: Article;
@@ -23,14 +24,16 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
     setIsGeneratingSummary(true);
 
     try {
-      // Simular geração de resumo com IA
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Use the real API to get article summary
+      const summaryData = await getArticleSummary(article._id);
 
-      const generatedSummary = `resumo`;
-
-      setSummary(generatedSummary);
-      setShowSummary(true);
-      toast.success("Resumo gerado com sucesso!");
+      if (summaryData.status === "success") {
+        setSummary(summaryData.summary);
+        setShowSummary(true);
+        toast.success("Resumo gerado com sucesso!");
+      } else {
+        throw new Error("Failed to generate summary");
+      }
     } catch (error) {
       toast.error("Erro ao gerar resumo. Tente novamente.");
       console.error("Erro ao gerar resumo:", error);

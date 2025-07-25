@@ -4,6 +4,7 @@ export type MessageResponse = {
 };
 
 export type Article = {
+  _id: string;
   title: string;
   url: string;
   content: string;

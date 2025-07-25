@@ -5,7 +5,7 @@ import {
   mockQueryArticles,
   generateEnhancedAIResponse,
 } from "../services/articleService";
-import { Message, Article } from "../types";
+import { Message } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSendMessageMutation } from "@/services/chat/mutations";
 import { MessageResponse } from "@/services/chat/types";

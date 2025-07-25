@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Article } from "@/services/chat/types";
 import { BookOpen, Copy, ExternalLink } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 interface ArticleReferenceProps {
@@ -9,10 +9,34 @@ interface ArticleReferenceProps {
 }
 
 const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [summary, setSummary] = useState<string>("");
+
   const handleCiteCopy = () => {
     const citation = `${article.title} - ${article.content}`;
     navigator.clipboard.writeText(citation);
     toast.success("Citação copiada para a área de transferência");
+  };
+
+  const handleGenerateSummary = async () => {
+    setIsGeneratingSummary(true);
+
+    try {
+      // Simular geração de resumo com IA
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const generatedSummary = `resumo`;
+
+      setSummary(generatedSummary);
+      setShowSummary(true);
+      toast.success("Resumo gerado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao gerar resumo. Tente novamente.");
+      console.error("Erro ao gerar resumo:", error);
+    } finally {
+      setIsGeneratingSummary(false);
+    }
   };
 
   return (
@@ -82,11 +106,48 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
           variant="outline"
           size="sm"
           className="text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple hover:text-emprad-dark-purple"
-          onClick={() => toast.info("Funcionalidade em desenvolvimento")}
+          onClick={handleGenerateSummary}
+          disabled={isGeneratingSummary}
         >
-          <BookOpen className="h-4 w-4 mr-1" /> Resumo
+          <BookOpen className="h-4 w-4 mr-1" />
+          {isGeneratingSummary ? "Gerando..." : "Resumo"}
         </Button>
       </div>
+
+      {showSummary && summary && (
+        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex justify-between items-start mb-2">
+            <h6 className="font-semibold text-emprad-dark-purple">
+              Resumo Gerado por IA
+            </h6>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSummary(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </Button>
+          </div>
+          <div
+            className="text-sm text-gray-700 whitespace-pre-line"
+            dangerouslySetInnerHTML={{ __html: summary }}
+          />
+          <div className="mt-3 flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(summary.replace(/<[^>]*>/g, ""));
+                toast.success("Resumo copiado para a área de transferência!");
+              }}
+              className="text-emprad-purple border-emprad-purple hover:bg-emprad-light-purple"
+            >
+              <Copy className="h-4 w-4 mr-1" /> Copiar Resumo
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

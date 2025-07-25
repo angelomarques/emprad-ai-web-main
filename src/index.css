@@ -46,3 +46,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .chat-markdown p,
+  .chat-markdown ul,
+  .chat-markdown ol {
+    margin-bottom: 0.5em; /* Increase as needed for more space */
+  }
+
+  .chat-markdown ul,
+  .chat-markdown ol {
+    @apply list-disc list-inside;
+  }
+}

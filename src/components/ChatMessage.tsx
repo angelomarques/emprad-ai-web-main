@@ -55,7 +55,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             <div className="font-medium">
               {isUser ? "Você" : "Assistente EMPRAD"}
             </div>
-            <div className="prose prose-sm max-w-none mt-2 prose-headings:text-[#283691] prose-headings:font-semibold prose-strong:font-bold">
+            <div className="prose prose-sm max-w-none mt-2 prose-headings:text-[#283691] prose-headings:font-semibold prose-strong:font-bold chat-markdown">
               <ReactMarkdown>{content}</ReactMarkdown>
             </div>
 

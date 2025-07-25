@@ -51,7 +51,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               <MessageCircle className="w-4 h-4 text-[#283691]" />
             )}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 max-w-full">
             <div className="font-medium">
               {isUser ? "Você" : "Assistente EMPRAD"}
             </div>

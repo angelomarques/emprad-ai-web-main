@@ -58,4 +58,8 @@
   .chat-markdown ol {
     @apply list-disc list-inside;
   }
+
+  .chat-markdown code {
+    @apply max-w-full block text-wrap;
+  }
 }

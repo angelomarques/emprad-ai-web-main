@@ -1,14 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import ChatMessage from "./ChatMessage";
-import ChatInput from "./ChatInput";
-import {
-  mockQueryArticles,
-  generateEnhancedAIResponse,
-} from "../services/articleService";
-import { Message } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSendMessageMutation } from "@/services/chat/mutations";
-import { MessageResponse } from "@/services/chat/types";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Message } from "../types";
+import ChatInput from "./ChatInput";
+import ChatMessage from "./ChatMessage";
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -23,45 +17,140 @@ const ChatInterface: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  const [mutationResponse, setMutationResponse] =
-    useState<MessageResponse | null>(null);
+  // TODO: evaluate if this is needed
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
-  const { mutate: sendMessage, isPending } = useSendMessageMutation({
-    onSuccess: (data) => {
-      setMutationResponse(data);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          content: data.answer,
-          isUser: false,
-          references: data.results,
-          timestamp: new Date(),
-        },
-      ]);
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
+
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [waitingForFirstChunk, setWaitingForFirstChunk] = useState(false);
+  const abortControllerRef = useRef(null); // To cancel the fetch request
+
+  const startStreaming = useCallback(
+    async (message: string) => {
+      if (isStreaming) return; // Prevent multiple simultaneous streams
+
+      setIsStreaming(true);
+      setWaitingForFirstChunk(true);
+      abortControllerRef.current = new AbortController();
+      const { signal } = abortControllerRef.current;
+
+      const messageId = Date.now().toString() + "_ai";
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
+          method: "POST",
+          signal: signal, // Attach the abort signal
+          body: JSON.stringify({ message: message }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Ensure the body is a ReadableStream
+        if (!response.body) {
+          throw new Error("Response body is not a ReadableStream.");
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8"); // For text streams
+
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          // value is a Uint8Array
+          const chunk = decoder.decode(value, { stream: true }); // Decode chunk by chunk
+
+          const parsedChunk = chunk
+            .split('data: {"type": "')
+            .at(-1)
+            .slice(0, -2);
+
+          const chunkStringToParse = '{"type": "' + parsedChunk;
+
+          try {
+            const response = JSON.parse(chunkStringToParse);
+
+            let answer = "";
+
+            let results = [];
+
+            if (response.type === "complete") {
+              answer = response.answer;
+              results = response.results;
+            } else if (response.type === "chunk") {
+              try {
+                const parsedContent = JSON.parse(
+                  response.content.split('","')[0] + '"}'
+                );
+
+                setWaitingForFirstChunk(false);
+
+                answer = parsedContent.answer;
+                results = parsedContent.results;
+              } catch (error) {
+                console.error("Error parsing chunk:", response.content);
+              }
+            }
+
+            setMessages((prev) => {
+              const newList = prev.filter((item) => item.id !== messageId);
+
+              return [
+                ...newList,
+                {
+                  id: messageId,
+                  content: answer,
+                  isUser: false,
+                  references: results,
+                  timestamp: new Date(),
+                },
+              ];
+            });
+          } catch (error) {
+            console.error("Error parsing chunk:", chunkStringToParse);
+          }
+        }
+      } catch (err) {
+        if (err.name === "AbortError") {
+          console.log("Fetch aborted.");
+        } else {
+          console.error("Error during streaming:", err);
+        }
+      } finally {
+        setIsStreaming(false);
+        abortControllerRef.current = null; // Clear the ref
+      }
     },
-    onError: (error) => {
-      console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          content:
-            "Desculpe, ocorreu um erro ao processar sua consulta. Por favor, tente novamente mais tarde.",
-          isUser: false,
-          timestamp: new Date(),
-        },
-      ]);
-    },
-  });
+    [isStreaming]
+  );
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const stopStreaming = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort(); // Abort the fetch request
+      console.log("Attempting to stop stream...");
+      setIsStreaming(false); // Update state immediately
+    }
+  }, []);
 
+  // Cleanup on unmount
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    return () => {
+      stopStreaming(); // Ensure stream is stopped if component unmounts
+    };
+  }, [stopStreaming]);
 
   const handleSendMessage = async (content: string) => {
     const userMessage: Message = {
@@ -71,40 +160,9 @@ const ChatInterface: React.FC = () => {
       timestamp: new Date(),
     };
 
-    sendMessage(content);
+    startStreaming(content);
+
     setMessages((prev) => [...prev, userMessage]);
-
-    // try {
-    //   console.log("Querying:", content);
-    //   const articles = await mockQueryArticles(content);
-
-    //   // Generate enhanced AI response
-    //   setTimeout(() => {
-    //     const aiResponseContent = generateEnhancedAIResponse(content, articles);
-
-    //     const aiResponse: Message = {
-    //       id: Date.now().toString(),
-    //       content: aiResponseContent,
-    //       isUser: false,
-    //       references: articles,
-    //       timestamp: new Date(),
-    //     };
-
-    //     setMessages((prev) => [...prev, aiResponse]);
-    //   }, 2000);
-    // } catch (error) {
-    //   console.error("Error processing message:", error);
-    //   setMessages((prev) => [
-    //     ...prev,
-    //     {
-    //       id: Date.now().toString(),
-    //       content:
-    //         "Desculpe, ocorreu um erro ao processar sua consulta. Por favor, tente novamente mais tarde.",
-    //       isUser: false,
-    //       timestamp: new Date(),
-    //     },
-    //   ]);
-    // }
   };
 
   return (
@@ -119,7 +177,7 @@ const ChatInterface: React.FC = () => {
             timestamp={message.timestamp}
           />
         ))}
-        {isPending && (
+        {waitingForFirstChunk && (
           <div className="flex justify-start mb-4">
             <div className="bg-gray-100 rounded-xl p-4 max-w-[80%]">
               <div className="flex space-x-2">
@@ -138,7 +196,10 @@ const ChatInterface: React.FC = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <ChatInput onSendMessage={handleSendMessage} isLoading={isPending} />
+      <ChatInput
+        onSendMessage={handleSendMessage}
+        isLoading={waitingForFirstChunk || isStreaming}
+      />
     </div>
   );
 };

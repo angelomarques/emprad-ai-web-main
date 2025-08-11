@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import type { Article, MessageResponse } from "./types";
+import type { Article, GetArticlesResponse, MessageResponse } from "./types";
 
 export async function sendMessage(message: string) {
   const response = await api.post<MessageResponse>("/chat", { message });
@@ -7,6 +7,6 @@ export async function sendMessage(message: string) {
 }
 
 export async function getArticles() {
-  const response = await api.get<Article[]>("/articles");
+  const response = await api.get<GetArticlesResponse>("/articles");
   return response.data;
 }

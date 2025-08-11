@@ -82,7 +82,7 @@ const Articles: React.FC = () => {
                 ? "Carregando..."
                 : error
                 ? "Erro ao carregar artigos"
-                : `Resultados (${articles.length})`}
+                : `Resultados (${articles.count})`}
             </h2>
           </div>
 
@@ -97,7 +97,7 @@ const Articles: React.FC = () => {
             </div>
           ) : (
             <div className="divide-y">
-              {articles.map((article) => (
+              {articles.data.map((article) => (
                 <div key={article.title} className="p-4 hover:bg-gray-50">
                   <h3 className="font-medium text-emprad-purple">
                     {article.title}

@@ -8,4 +8,10 @@ export type Article = {
   title: string;
   url: string;
   content: string;
+  authors: string[];
+};
+
+export type GetArticlesResponse = {
+  data: Article[];
+  count: number;
 };

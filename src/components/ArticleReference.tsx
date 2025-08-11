@@ -15,9 +15,25 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
   const [summary, setSummary] = useState<string>("");
 
   const handleCiteCopy = () => {
-    const citation = `${article.title} - ${article.content}`;
+    // Format authors in ABNT format: SURNAME, N.
+    const formattedAuthors = article.authors
+      .map((author) => {
+        const nameParts = author.trim().split(" ");
+        if (nameParts.length >= 2) {
+          const lastName = nameParts[nameParts.length - 1];
+          const initials = nameParts
+            .slice(0, -1)
+            .map((part) => part.charAt(0) + ".")
+            .join(" ");
+          return `${lastName.toUpperCase()}, ${initials}`;
+        }
+        return author; // Fallback for single names
+      })
+      .join("; ");
+
+    const citation = `${formattedAuthors}. ${article.title}.`;
     navigator.clipboard.writeText(citation);
-    toast.success("Citação copiada para a área de transferência");
+    toast.success("Citação ABNT copiada para a área de transferência");
   };
 
   const handleGenerateSummary = async () => {
@@ -48,10 +64,8 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
         <h5 className="font-medium text-emprad-dark-purple text-lg">
           {article.title}
         </h5>
-        {/* <p className="text-gray-700 mt-1">
-          {article.authors.join(", ")} ({article.year})
-        </p>
-        {article.pageNumber && (
+        <p className="text-gray-700 mt-1">{article.authors.join(", ")}</p>
+        {/* {article.pageNumber && (
           <p className="text-sm text-gray-500">Página {article.pageNumber}</p>
         )} */}
       </div>

@@ -25,7 +25,9 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
             .slice(0, -1)
             .map((part) => part.charAt(0) + ".")
             .join(" ");
-          return `${lastName.toUpperCase()}, ${initials}`;
+          return `${
+            lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase()
+          }, ${initials}`;
         }
         return author; // Fallback for single names
       })
@@ -58,13 +60,30 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
     }
   };
 
+  const authorsReference = article.authors
+    .map((author) => {
+      const nameParts = author.trim().split(" ");
+      if (nameParts.length >= 2) {
+        const lastName = nameParts[nameParts.length - 1];
+        const initials = nameParts
+          .slice(0, -1)
+          .map((part) => part.charAt(0) + ".")
+          .join(" ");
+        return `${
+          lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase()
+        }, ${initials}`;
+      }
+      return author; // Fallback for single names
+    })
+    .join("; ");
+
   return (
     <div className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="mb-2">
         <h5 className="font-medium text-emprad-dark-purple text-lg">
           {article.title}
         </h5>
-        <p className="text-gray-700 mt-1">{article.authors.join(", ")}</p>
+        <p className="text-gray-700 mt-1">{authorsReference}</p>
         {/* {article.pageNumber && (
           <p className="text-sm text-gray-500">Página {article.pageNumber}</p>
         )} */}

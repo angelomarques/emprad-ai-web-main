@@ -9,6 +9,7 @@ export type Article = {
   url: string;
   content: string;
   authors: string[];
+  keywords?: string[];
 };
 
 export type GetArticlesResponse = {

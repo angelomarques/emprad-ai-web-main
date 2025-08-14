@@ -99,14 +99,14 @@ const ArticleReference: React.FC<ArticleReferenceProps> = ({ article }) => {
       )}
 
       <div className="flex flex-wrap gap-2 mt-2 mb-3">
-        {/* {article.keywords.map((keyword, index) => (
+        {article.keywords?.map((keyword, index) => (
           <span
             key={index}
             className="bg-emprad-light-purple text-emprad-purple px-2 py-1 rounded-md text-xs"
           >
             {keyword}
           </span>
-        ))} */}
+        ))}
       </div>
 
       <div className="flex flex-wrap gap-2">

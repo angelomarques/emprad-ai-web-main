@@ -19,7 +19,7 @@ import { useLoginMutation } from "@/services/auth/mutations";
 import { useAuthStore } from "@/stores/auth-store";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email("Por favor, insira um endereço de email válido"),
   password: z.string(),
 });
 
@@ -61,10 +61,10 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
-            Welcome back
+            Bem-vindo de volta
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your credentials to access your account
+            Digite suas credenciais para acessar sua conta
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -74,7 +74,7 @@ const Login = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Digite seu email"
                 {...register("email")}
                 className={errors.email ? "border-red-500" : ""}
               />
@@ -84,12 +84,12 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Senha</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Digite sua senha"
                   {...register("password")}
                   className={errors.password ? "border-red-500" : ""}
                 />
@@ -118,7 +118,7 @@ const Login = () => {
               <Alert variant="destructive">
                 <AlertDescription>
                   {loginMutation.error.message ||
-                    "An error occurred during login"}
+                    "Ocorreu um erro durante o login"}
                 </AlertDescription>
               </Alert>
             )}
@@ -131,10 +131,10 @@ const Login = () => {
               {loginMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
+                  Entrando...
                 </>
               ) : (
-                "Sign in"
+                "Entrar"
               )}
             </Button>
           </form>

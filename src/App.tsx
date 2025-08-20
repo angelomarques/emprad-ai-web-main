@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +12,7 @@ import SmartSearch from "./pages/SmartSearch";
 import DirectDownload from "./pages/DirectDownload";
 import IndexedArticles from "./pages/IndexedArticles";
 import PromptEditor from "./pages/PromptEditor";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,7 @@ const App = () => (
           <Route path="/direct-download" element={<DirectDownload />} />
           <Route path="/indexed-articles" element={<IndexedArticles />} />
           <Route path="/prompt-editor" element={<PromptEditor />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

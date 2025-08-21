@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { LogOut, User } from "lucide-react";
+import { useAuthStore } from "@/stores/auth-store";
+import { useLogoutMutation } from "@/services/auth/mutations";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -8,6 +11,14 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const { isAuthenticated, user } = useAuthStore();
+  const logoutMutation = useLogoutMutation();
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -82,12 +93,40 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
         >
           CONTATO
-        </Link>
-        <div className="py-2 px-4">
-          <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold w-full">
-            LOGIN
-          </Button>
-        </div> */}
+        </Link> */}
+
+        {/* Authentication Section */}
+        <div className="border-t border-blue-800 pt-4">
+          {isAuthenticated ? (
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 text-white px-4">
+                <User size={16} />
+                <span className="text-sm">{user?.name}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                disabled={logoutMutation.isPending}
+                className="text-white hover:text-yellow-300 hover:bg-blue-800 w-full justify-start"
+              >
+                <LogOut size={16} className="mr-2" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Link to="/login" onClick={onClose}>
+                <Button
+                  variant="ghost"
+                  className="text-white hover:text-yellow-300 hover:bg-blue-800 w-full"
+                >
+                  Login
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

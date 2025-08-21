@@ -31,12 +31,6 @@ const Login = () => {
   const { isAuthenticated } = useAuthStore();
   const loginMutation = useLoginMutation();
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    navigate("/");
-    return null;
-  }
-
   const {
     register,
     handleSubmit,
@@ -44,6 +38,12 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  // Redirect if already authenticated
+  if (isAuthenticated) {
+    navigate("/");
+    return null;
+  }
 
   const onSubmit = async (data: Required<LoginFormData>) => {
     try {
@@ -61,7 +61,7 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
-            Bem-vindo de volta
+            Bem-vindo
           </CardTitle>
           <CardDescription className="text-center">
             Digite suas credenciais para acessar sua conta

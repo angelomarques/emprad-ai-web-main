@@ -1,16 +1,18 @@
+import { Button } from "@/components/ui/button";
+import { useLogoutMutation } from "@/services/auth/mutations";
+import { useAuthStore } from "@/stores/auth-store";
+import { LogOut, User } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import ResearchAssistantSubmenu from "./ResearchAssistantSubmenu";
 
 const DesktopNavigation: React.FC = () => {
+  const { isAuthenticated, user } = useAuthStore();
+  const logoutMutation = useLogoutMutation();
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <div className="hidden md:flex items-center justify-between flex-grow ml-8">
       <nav className="flex items-center space-x-8">
@@ -49,11 +51,36 @@ const DesktopNavigation: React.FC = () => {
         </button> */}
       </nav>
 
-      <div>
-        {/* TODO: implement it */}
-        {/* <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold">
-          LOGIN
-        </Button> */}
+      <div className="flex items-center space-x-4">
+        {isAuthenticated ? (
+          <>
+            <div className="flex items-center space-x-2 text-white">
+              <User size={16} />
+              <span className="text-sm">{user?.name}</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+              className="text-white hover:text-yellow-300 hover:bg-blue-800"
+            >
+              <LogOut size={16} className="mr-2" />
+              Logout
+            </Button>
+          </>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Link to="/login">
+              <Button
+                variant="ghost"
+                className="text-white hover:text-yellow-300 hover:bg-blue-800"
+              >
+                Login
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

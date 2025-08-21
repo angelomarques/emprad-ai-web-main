@@ -7,12 +7,13 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role?: string;
 }
 
 export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
   user: User;
-  token: string;
 }
 
 export interface AuthError {

@@ -13,6 +13,7 @@ import DirectDownload from "./pages/DirectDownload";
 import IndexedArticles from "./pages/IndexedArticles";
 import PromptEditor from "./pages/PromptEditor";
 import Login from "./pages/Login";
+import InConstruction from "./pages/InConstruction";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<InConstruction />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/about" element={<About />} />
           <Route path="/research-assistant" element={<ResearchAssistant />} />
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/indexed-articles" element={<IndexedArticles />} />
           <Route path="/prompt-editor" element={<PromptEditor />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/construction" element={<InConstruction />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

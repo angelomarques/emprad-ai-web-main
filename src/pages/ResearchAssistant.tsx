@@ -2,11 +2,18 @@ import React from "react";
 import Header from "../components/Header";
 import ChatInterface from "../components/ChatInterface";
 import { Book, Search, Download, Database } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuthStore } from "@/stores/auth-store";
 
 const ResearchAssistant: React.FC = () => {
   const isMobile = useIsMobile();
+
+  const { isAuthenticated, token } = useAuthStore();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">

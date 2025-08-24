@@ -14,6 +14,7 @@ import IndexedArticles from "./pages/IndexedArticles";
 import PromptEditor from "./pages/PromptEditor";
 import Login from "./pages/Login";
 import InConstruction from "./pages/InConstruction";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -24,10 +25,17 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<InConstruction />} />
+          <Route path="/" element={<Index />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/about" element={<About />} />
-          <Route path="/research-assistant" element={<ResearchAssistant />} />
+          <Route
+            path="/research-assistant"
+            element={
+              <ProtectedRoute>
+                <ResearchAssistant />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/smart-search" element={<SmartSearch />} />
           <Route path="/direct-download" element={<DirectDownload />} />
           <Route path="/indexed-articles" element={<IndexedArticles />} />

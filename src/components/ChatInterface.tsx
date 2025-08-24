@@ -3,8 +3,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Message } from "../types";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
+import { useAuthStore } from "@/stores/auth-store";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { useLogoutMutation } from "@/services/auth/mutations";
 
 const ChatInterface: React.FC = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "0",
@@ -16,7 +21,9 @@ const ChatInterface: React.FC = () => {
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-
+  const { token } = useAuthStore();
+  const { toast } = useToast();
+  const logoutMutation = useLogoutMutation();
   // TODO: evaluate if this is needed
   // const scrollToBottom = () => {
   //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,10 +55,20 @@ const ChatInterface: React.FC = () => {
           body: JSON.stringify({ message: message }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
+          if (response.status === 401) {
+            logoutMutation.mutate();
+            toast({
+              title: "Erro",
+              description: "Sessão expirada. Por favor, faça login novamente.",
+              variant: "destructive",
+            });
+            navigate("/login");
+          }
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
@@ -67,6 +84,7 @@ const ChatInterface: React.FC = () => {
           const { done, value } = await reader.read();
 
           if (done) {
+            const chunk = decoder.decode(value, { stream: true }); // Decode chunk by chunk
             break;
           }
 
@@ -125,9 +143,9 @@ const ChatInterface: React.FC = () => {
         }
       } catch (err) {
         if (err.name === "AbortError") {
-          console.log("Fetch aborted.");
+          // TODO: handle abort error
         } else {
-          console.error("Error during streaming:", err);
+          // TODO: handle other errors
         }
       } finally {
         setIsStreaming(false);
@@ -140,7 +158,6 @@ const ChatInterface: React.FC = () => {
   const stopStreaming = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort(); // Abort the fetch request
-      console.log("Attempting to stop stream...");
       setIsStreaming(false); // Update state immediately
     }
   }, []);

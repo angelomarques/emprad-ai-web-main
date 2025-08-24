@@ -32,7 +32,7 @@ export const useAuthStore = create<AuthState>()(
           set({
             isAuthenticated: true,
             user: response.user,
-            token: response.token,
+            token: response.access_token,
             isLoading: false,
             error: null,
           });

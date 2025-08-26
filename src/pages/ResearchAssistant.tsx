@@ -25,8 +25,8 @@ const ResearchAssistant: React.FC = () => {
             Assistente de Pesquisa EMPRAD
           </h1>
           <p className="text-gray-600 mt-2">
-            Use nossa IA para pesquisar entre os 1585 artigos científicos do
-            EMPRAD e encontrar informações relevantes para sua pesquisa.
+            Use nossa IA para pesquisar entre os artigos científicos do EMPRAD e
+            encontrar informações relevantes para sua pesquisa.
           </p>
         </div>
 

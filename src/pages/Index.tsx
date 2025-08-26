@@ -72,8 +72,7 @@ const Index: React.FC = () => {
               Biblioteca Digital
             </h3>
             <p className="text-gray-600 mb-4">
-              Acesso aos 1585 artigos científicos publicados nos anais do
-              EMPRAD.
+              Acesso aos artigos científicos publicados nos anais do EMPRAD.
             </p>
             <Link
               to="/articles"

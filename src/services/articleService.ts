@@ -231,7 +231,7 @@ export const generateEnhancedAIResponse = (
     const generalResponses = [
       `Não encontrei artigos específicos sobre "${query}" nos anais do EMPRAD, mas posso ajudar em outros tópicos relacionados ao empreendedorismo, inovação, gestão ou sustentabilidade. Você poderia reformular sua pergunta?`,
       `Sua pergunta sobre "${query}" é interessante, mas não localizei estudos específicos nos anais do EMPRAD. Gostaria de explorar algum tema relacionado como empreendedorismo social, inovação tecnológica ou gestão estratégica?`,
-      `Não identifiquei pesquisas diretamente relacionadas a "${query}" nos 1585 artigos do EMPRAD. Talvez possamos refinar sua busca ou explorar tópicos adjacentes na área de administração e empreendedorismo?`,
+      `Não identifiquei pesquisas diretamente relacionadas a "${query}" nos artigos do EMPRAD. Talvez possamos refinar sua busca ou explorar tópicos adjacentes na área de administração e empreendedorismo?`,
     ];
     return generalResponses[
       Math.floor(Math.random() * generalResponses.length)
